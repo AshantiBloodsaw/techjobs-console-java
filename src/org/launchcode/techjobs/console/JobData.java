@@ -10,16 +10,19 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by LaunchCode
  */
 public class JobData {
 
+
     private static final String DATA_FILE = "resources/job_data.csv";
     private static Boolean isDataLoaded = false;
 
     private static ArrayList<HashMap<String, String>> allJobs;
+
 
     /**
      * Fetch list of all values from loaded data,
@@ -57,12 +60,12 @@ public class JobData {
     /**
      * Returns results of search the jobs data by key/value, using
      * inclusion of the search term.
-     *
+     * <p>
      * For example, searching for employer "Enterprise" will include results
      * with "Enterprise Holdings, Inc".
      *
-     * @param column   Column that should be searched.
-     * @param value Value of teh field to search for
+     * @param column Column that should be searched.
+     * @param value  Value of teh field to search for
      * @return List of all jobs matching the criteria
      */
     public static ArrayList<HashMap<String, String>> findByColumnAndValue(String column, String value) {
@@ -74,7 +77,8 @@ public class JobData {
 
         for (HashMap<String, String> row : allJobs) {
 
-            String aValue = row.get(column);
+            String aValue = row.get(column).toLowerCase();
+            value = value.toLowerCase();
 
             if (aValue.contains(value)) {
                 jobs.add(row);
@@ -84,8 +88,30 @@ public class JobData {
         return jobs;
     }
 
-    /**
-     * Read in data from a CSV file and store it in a list
+    public static ArrayList<HashMap<String, String>> findByValue(String value) {
+
+        // load data, if not already loaded
+        loadData();
+
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> row : allJobs) {
+
+            String aValue = row.get(value).toLowerCase();
+            value = value.toLowerCase();
+
+
+            if (aValue.contains(value)) {
+                jobs.add(row);
+                System.out.println();
+            }
+        }
+
+        return jobs;
+    }
+
+
+    /*** Read in data from a CSV file and store it in a list
      */
     private static void loadData() {
 
@@ -124,5 +150,6 @@ public class JobData {
             e.printStackTrace();
         }
     }
-
 }
+
+
